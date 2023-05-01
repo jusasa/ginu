@@ -1,5 +1,7 @@
 import random as ran
 import pickle as pik
+import time #이건 메세지 창 나올때 시간간격두기위해 필요한거 time.sleep() ()안에 숫자넣으면됨
+import os #이건 os.system('cls')라는  함수쓰는건데 이게 화면 넘어갈떄 글자 밀어내는게아니라 새로운화면 나오는것처럼 연출가능하데
 
 one_line: str = '-*-' * 10
 rank: int = 1
@@ -8,7 +10,7 @@ running: bool = True
 
 rank_table: dict = {1: '평범한', 2: '기묘한', 3: '이상한', 4: '고상한', 5: '비범한'}
 stat: dict = {"str": 4, "dex": 4, "int": 4, "luk": 4, "atk": 5, "def": 1, "crt_chance": 0.0, "crt_multiply": 1.1}
-moster: dict = {1: "슬라임", 2: "다람쥐"}
+moster: dict = {1: "슬라임", 2: "다람쥐"}#이거 몬스터 정보 써놓은거면 내가 나중에 바꾼다?
 moster_info = {""}
 
 
@@ -45,6 +47,56 @@ def main_display():
 {0}
 |1. 모험    2. 강화     3. 종료|
 {0}""".format(one_line, rank_table[rank], current_upgraded))
+    A = input("선택:")
+    if A=="1":
+        pass
+    elif A=="2":
+        print("강화를 시작합니다.")
+        print("강화방식을 선택해주십시오")
+        time.sleep(0.8)
+        print("1.안정적이지만 수치가 낮은 강화 2.위험하지만 수치가 높은 강화 3.평범한 강화")
+        B = input("선택:")
+        if B =="1":
+            print("1.안정적이지만 수치가 낮은 강화를 선택하셨습니다.")
+            print("강화를 시작합니다.")
+            time.sleep(3)
+            g = ran.randint(0,100)
+            print(g)
+
+            if g % 1.5 == 0:
+                print("강화에 성공했습니다.\n게임을 시작합니다.")
+
+            else:
+                print("강화에 실패했습니다.\n게임을 시작합니다.")
+        if B =="2":
+            print("2.위험하지만 수치가 높은 강화를 선택하셨습니다.")
+            print("강화를 시작합니다.")
+            time.sleep(3)
+            g = ran.randint(0,100)
+            print(g)
+
+            if g % 3 == 0:
+                print("강화에 성공했습니다.\n게임을 시작합니다.")
+
+            else:
+                print("강화에 실패했습니다.\n게임을 시작합니다.")
+
+        if B =="3":
+            print("3.평범한 강화를 선택하셨습니다.")
+            print("강화를 시작합니다.")
+            time.sleep(3)
+            g = ran.randint(0,100)
+            print(g)
+
+            if g % 2 == 0:
+                print("강화에 성공했습니다.\n게임을 시작합니다.")
+
+            else:
+                print("강화에 실패했습니다.\n게임을 시작합니다.")
+
+
+
+
 
 
 def battle_filed():
@@ -74,4 +126,4 @@ def main():
                     print(s.rank(), s.hp())
 
 
-main()
+main()#010 6245 4059 배창득교수님(배터리특강)
