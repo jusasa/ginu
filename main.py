@@ -106,6 +106,27 @@ def battle_filed():
 {0}
 |1. 전진   2. 후퇴  3. 돌아가기|
 """.format(one_line))
+    A = input("선택:")
+    if A=="1":
+        print("당신은 전진합니다.")
+        print(luk)
+        if luk<=30:
+            print("당신은 적과 조우합니다.")
+
+        pass
+    elif A =="2":
+        print("당신은 불길함을 느끼고 후퇴하기로 결정합니다.")
+        pass #이거 pass말고 뒤로돌아가는거 추가하셈
+    elif A =="3":
+        print("당신은 돌아가기로 결정합니다.")
+        pass #이것도 뒤로돌아가는걸로 바꿔
+
+def battle_filed():
+    print("""\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+{0}
+|         이계의 전장         |
+{0}
+|1.""")
 
 
 def main():
@@ -126,4 +147,4 @@ def main():
                     print(s.rank(), s.hp())
 
 
-main()#010 6245 4059 배창득교수님(배터리특강)
+#main()#010 6245 4059 배창득교수님(배터리특강)
