@@ -6,6 +6,13 @@
 
 
 아래는 참고용으로 만든 게임
+
+<details>
+
+<summary> 열기 / 닫기 </summary>
+
+## 벌레 잡기
+
 ```python
 import pygame as pga
 
@@ -644,3 +651,5 @@ while  isRunning:
     
 pga.quit()
 ```
+
+</details>
