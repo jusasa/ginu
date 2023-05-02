@@ -30,51 +30,6 @@ but_img = image.load('resourse\\images\\img_button.png')
 
 
 
-def text(fon,size,text,x,y,color):
-    
-    fontset = font.Font(fon,size)
-    
-    fontsetrender=fontset.render(str(text),True,color)
-    
-    textrect = fontsetrender.get_rect()
-    
-    textrect.center = (x,y)
-    
-    dis.blit(fontsetrender,textrect)
-
-def set_gamma(img, gamma):
-    buf = img.get_buffer()
-    gmap = bytes( min(255, int(255*pow(i/255, gamma))) for i in range(256) )
-    buf.write(buf.raw.translate(gmap), 0)
-    return
-
-def opening():
-    dis.fill(whi)
-    text(ui_font, 100, '진우의 학교 생활', 1280 / 2, 100, blk)
-    if start_but.draw():
-        return 1
-    text(ui_font, 80, '시작', 640, 500, blk)
-    return 0
-
-def mainmenu():
-    global running
-    dis.fill(whi)
-    if fight_but.draw():
-        print("진우는 싸우러 감 아무튼 그럼 그리고 다시 돌아옴 ㅇㅇ")
-    if upgrade_but.draw():
-        print("진우는 강화를 하나 실패하고 상실감을 감싸 안고 돌아옴 ㅇㅇ")
-    if exit_but.draw():
-        running = False
-        quit()
-        sys.exit()
-    text(digi_font, 50, f'+ {current_upgraded} {rank_table[rank]} 진우',640,150,(255,153,255) )
-    text(ui_font, 35, '이계의 전장', 207.85, 600, blk)
-    text(ui_font, 80, '강화', 390.71, 600, blk)
-    text(ui_font, 80, '종료', 1122.14, 600, red)
-    return
-
-
-
 class Slime:
     def __init__(self, hp, dei, rank, crt_chance):
         self.hp = hp
@@ -210,6 +165,52 @@ exit_but = Button(1122.14, 600, but_img, 10)
 
 
 local = loaction[1]
+
+
+
+
+def text(fon,size,text,x,y,color):
+    
+    fontset = font.Font(fon,size)
+    
+    fontsetrender=fontset.render(str(text),True,color)
+    
+    textrect = fontsetrender.get_rect()
+    
+    textrect.center = (x,y)
+    
+    dis.blit(fontsetrender,textrect)
+
+def set_gamma(img, gamma):
+    buf = img.get_buffer()
+    gmap = bytes( min(255, int(255*pow(i/255, gamma))) for i in range(256) )
+    buf.write(buf.raw.translate(gmap), 0)
+    return
+
+def opening():
+    dis.fill(whi)
+    text(ui_font, 100, '진우의 학교 생활', 1280 / 2, 100, blk)
+    if start_but.draw():
+        return 1
+    text(ui_font, 80, '시작', 640, 500, blk)
+    return 0
+
+def mainmenu():
+    global running
+    dis.fill(whi)
+    if fight_but.draw():
+        print("진우는 싸우러 감 아무튼 그럼 그리고 다시 돌아옴 ㅇㅇ")
+    if upgrade_but.draw():
+        print("진우는 강화를 하나 실패하고 상실감을 감싸 안고 돌아옴 ㅇㅇ")
+    if exit_but.draw():
+        running = False
+        quit()
+        sys.exit()
+    text(digi_font, 50, f'+ {current_upgraded} {rank_table[rank]} 진우',640,150,(255,153,255) )
+    text(ui_font, 35, '이계의 전장', 207.85, 600, blk)
+    text(ui_font, 80, '강화', 390.71, 600, blk)
+    text(ui_font, 80, '종료', 1122.14, 600, red)
+    return
 
 
 
