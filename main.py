@@ -5,22 +5,74 @@ from time import sleep #이건 메세지 창 나올때 시간간격두기위해 
 import sys
 from pygame import *
 
-one_line: str = '-*-' * 10
+# one_line: str = '-*-' * 10
 rank: int = 1
 current_upgraded: int = 0
-fps: int = 30
+fps: int = 15
 running: bool = True
 
 rank_table: dict = {1: '평범한', 2: '기묘한', 3: '이상한', 4: '고상한', 5: '비범한'}
 stat: dict = {"str": 4, "dex": 4, "int": 4, "luk": 4, "atk": 5, "def": 1, "crt_chance": 0.0, "crt_multiply": 1.1}
 moster: dict = {1: "슬라임", 2: "다람쥐"}#이거 몬스터 정보 써놓은거면 내가 나중에 바꾼다?
+loaction: dict = {1: '오프닝', 2: '메인메뉴'}
+whi = (255, 255, 255)
+blk = (0, 0, 0)
+red = (255, 102, 102)
 
 init() # pygame 초기화
 
 display.set_caption("진우 키우기") # pygame title set
-dis = display.set_mode((1000, 1000), 0, 32) #  window set
+dis = display.set_mode((1280, 720), 0, 32) #  window set
 clock = time.Clock() # time setting
-system_font = font.SysFont('굴림', 50)
+digi_font = 'resourse\\fonts\EliceDigitalCodingverH_Regular.ttf'
+ui_font = 'resourse\\fonts\\SUITE-Light.ttf'
+but_img = image.load('resourse\\images\\img_button.png')
+
+
+
+def text(fon,size,text,x,y,color):
+    
+    fontset = font.Font(fon,size)
+    
+    fontsetrender=fontset.render(str(text),True,color)
+    
+    textrect = fontsetrender.get_rect()
+    
+    textrect.center = (x,y)
+    
+    dis.blit(fontsetrender,textrect)
+
+def set_gamma(img, gamma):
+    buf = img.get_buffer()
+    gmap = bytes( min(255, int(255*pow(i/255, gamma))) for i in range(256) )
+    buf.write(buf.raw.translate(gmap), 0)
+    return
+
+def opening():
+    dis.fill(whi)
+    text(ui_font, 100, '진우의 학교 생활', 1280 / 2, 100, blk)
+    if start_but.draw():
+        return 1
+    text(ui_font, 80, '시작', 640, 500, blk)
+    return 0
+
+def mainmenu():
+    global running
+    dis.fill(whi)
+    if fight_but.draw():
+        print("진우는 싸우러 감 아무튼 그럼 그리고 다시 돌아옴 ㅇㅇ")
+    if upgrade_but.draw():
+        print("진우는 강화를 하나 실패하고 상실감을 감싸 안고 돌아옴 ㅇㅇ")
+    if exit_but.draw():
+        running = False
+        quit()
+        sys.exit()
+    text(digi_font, 50, f'+ {current_upgraded} {rank_table[rank]} 진우',640,150,(255,153,255) )
+    text(ui_font, 35, '이계의 전장', 207.85, 600, blk)
+    text(ui_font, 80, '강화', 390.71, 600, blk)
+    text(ui_font, 80, '종료', 1122.14, 600, red)
+    return
+
 
 
 class Slime:
@@ -137,7 +189,6 @@ class Button():
             
             if mouse.get_pressed()[0] == 1 and self.clicked == False:
                 
-                
                 self.clicked = True
                 
                 action = True
@@ -150,18 +201,32 @@ class Button():
         
         return action
 
+
+
+start_but = Button(640, 500, but_img, 10)
+fight_but = Button(207.85, 600, but_img, 10)
+upgrade_but = Button(390.71, 600, but_img, 10)
+exit_but = Button(1122.14, 600, but_img, 10)
+
+
+local = loaction[1]
+
+
+
 while running:
     for e in event.get():
         if e.type == QUIT:
             quit()
             sys.exit()
-    dis.fill((255, 255, 255))
-    dis.blit(system_font.render("JINU IS DUMB", 1, (0, 0, 0)), (500, 500))
-    
+        if e.type == KEYDOWN:
+            if e.key == K_ESCAPE:
+                quit()
+                sys.exit()
+    if local == '오프닝':
+        if opening() == 1:
+            local = loaction[2]
+    if local == '메인메뉴':
+        mainmenu()
     display.flip()
     clock.tick(fps)
-
-
-
-
 
