@@ -9,12 +9,13 @@ from pygame import *
 rank: int = 1
 current_upgraded: int = 0
 fps: int = 15
+upgrade_prob = 0
 running: bool = True
 
 rank_table: dict = {1: '평범한', 2: '기묘한', 3: '이상한', 4: '고상한', 5: '비범한'}
 stat: dict = {"str": 4, "dex": 4, "int": 4, "luk": 4, "atk": 5, "def": 1, "crt_chance": 0.0, "crt_multiply": 1.1}
 moster: dict = {1: "슬라임", 2: "다람쥐"}#이거 몬스터 정보 써놓은거면 내가 나중에 바꾼다?
-loaction: dict = {1: '오프닝', 2: '메인메뉴'}
+loaction: dict = {1: '오프닝', 2: '메인메뉴', 3: '강화소'}
 whi = (255, 255, 255)
 blk = (0, 0, 0)
 red = (255, 102, 102)
@@ -27,7 +28,7 @@ clock = time.Clock() # time setting
 digi_font = 'resourse\\fonts\EliceDigitalCodingverH_Regular.ttf'
 ui_font = 'resourse\\fonts\\SUITE-Light.ttf'
 but_img = image.load('resourse\\images\\img_button.png')
-
+cir_but_img = image.load('resourse\\images\\circle_but.png')
 
 
 class Slime:
@@ -37,21 +38,6 @@ class Slime:
         self.dei = dei
         self.crt_chance = crt_chance
 
-    def health(self):
-        hp = 10
-        return hp
-
-    def defence(self):
-        dei = 3
-        return dei
-
-    def rank(self):
-        rank = 1
-        return rank
-
-    def crt_chance(self):
-        crt_chance = 10.0
-        return crt_chance
 
 
     # A = input("선택:")
@@ -161,8 +147,9 @@ class Button():
 start_but = Button(640, 500, but_img, 10)
 fight_but = Button(207.85, 600, but_img, 10)
 upgrade_but = Button(390.71, 600, but_img, 10)
+upgrade1_but = Button(640, 600, but_img, 10)
 exit_but = Button(1122.14, 600, but_img, 10)
-
+back_but = Button(85, 85, cir_but_img, 5)
 
 local = loaction[1]
 
@@ -199,18 +186,42 @@ def mainmenu():
     global running
     dis.fill(whi)
     if fight_but.draw():
-        print("진우는 싸우러 감 아무튼 그럼 그리고 다시 돌아옴 ㅇㅇ")
+        return '1'
     if upgrade_but.draw():
-        print("진우는 강화를 하나 실패하고 상실감을 감싸 안고 돌아옴 ㅇㅇ")
+        return '2'
     if exit_but.draw():
         running = False
         quit()
         sys.exit()
-    text(digi_font, 50, f'+ {current_upgraded} {rank_table[rank]} 진우',640,150,(255,153,255) )
+    text(digi_font, 50, f'+ {current_upgraded} {rank_table[rank]} 진우',640,150,red)
     text(ui_font, 35, '이계의 전장', 207.85, 600, blk)
     text(ui_font, 80, '강화', 390.71, 600, blk)
     text(ui_font, 80, '종료', 1122.14, 600, red)
-    return
+    return '0'
+
+def upgrade():
+    global current_upgraded, upgrade_prob, rank
+    dis.fill(whi)
+    if upgrade_prob >= 69:
+            upgrade_prob = 70
+    if back_but.draw():
+        return '2'
+    if upgrade1_but.draw():
+        ra = ran.randint(1,100)
+        d = pow(stat["luk"], 1/3) * (ra / 100) + ra
+        if d >= upgrade_prob:
+            upgrade_prob += 7
+            current_upgraded += 1
+        if d < upgrade_prob:
+            upgrade_prob -= 7
+            current_upgraded -= 1
+        print(d,100- upgrade_prob, current_upgraded)
+    text(digi_font, 50, f'+ {current_upgraded:>3} {rank_table[rank]} 진우',640,150,red)
+    text(digi_font, 50, '현재 강화 확률 : {0:>3}%'.format(100 - upgrade_prob),640,210,red)
+    text(ui_font, 80, '강화', 640, 600, blk)
+    text(ui_font, 40, '뒤로', 85, 85, blk)
+    
+
 
 
 
@@ -227,7 +238,11 @@ while running:
         if opening() == 1:
             local = loaction[2]
     if local == '메인메뉴':
-        mainmenu()
+        if mainmenu() == '2':
+            local = loaction[3]
+    if local == '강화소':
+        if upgrade() == '2':
+            local = loaction[2]
     display.flip()
     clock.tick(fps)
 
