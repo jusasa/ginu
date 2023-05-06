@@ -9,26 +9,35 @@ from pygame import *
 rank: int = 1
 current_upgraded: int = 0
 fps: int = 15
-upgrade_prob = 0
+upgrade_prob: int = 0
+exp: int = 0
+need_exp: int = current_upgraded * 1.3 + 500
+exx: float = exp/need_exp
 running: bool = True
 
 rank_table: dict = {1: '평범한', 2: '기묘한', 3: '이상한', 4: '고상한', 5: '비범한'}
-stat: dict = {"str": 4, "dex": 4, "int": 4, "luk": 4, "atk": 5, "def": 1, "crt_chance": 0.0, "crt_multiply": 1.1}
+stat: dict = {"str": 4, "dex": 4, "int": 4, "luk": 4, "atk": 4, "def": 4, "crt_chance": 1.0, "crt_multiply": 1.1}
 moster: dict = {1: "슬라임", 2: "다람쥐"}#이거 몬스터 정보 써놓은거면 내가 나중에 바꾼다?
-loaction: dict = {1: '오프닝', 2: '메인메뉴', 3: '강화소'}
+loaction: dict = {1: '오프닝', 2: '메인메뉴', 3: '강화소',4: '학교'}
 whi = (255, 255, 255)
 blk = (0, 0, 0)
-red = (255, 102, 102)
+pink = (231,113,202)
+blu = (7,153,231)
+ylw = (240, 216, 35)
 
 init() # pygame 초기화
-
 display.set_caption("진우 키우기") # pygame title set
 dis = display.set_mode((1280, 720), 0, 32) #  window set
 clock = time.Clock() # time setting
-digi_font = 'resourse\\fonts\EliceDigitalCodingverH_Regular.ttf'
+digi_font = 'resourse\\fonts\\EliceDigitalCodingverH_Regular.ttf'
 ui_font = 'resourse\\fonts\\SUITE-Light.ttf'
+son_font = 'resourse\\fonts\\nanumsongulssi.ttf'
+son2_font = 'resourse\\fonts\\daluigeado.ttf'
 but_img = image.load('resourse\\images\\img_button.png')
-cir_but_img = image.load('resourse\\images\\circle_but.png')
+sq_img = image.load('resourse\\images\\sq_but.png')
+bg_img = image.load('resourse\\images\\bg.png')
+school_img = image.load('resourse\\images\\school.png')
+
 
 
 class Slime:
@@ -38,71 +47,6 @@ class Slime:
         self.dei = dei
         self.crt_chance = crt_chance
 
-
-
-    # A = input("선택:")
-    # if A=="1":
-    #     pass
-    # elif A=="2":
-    #     print("강화를 시작합니다.")
-    #     print("강화방식을 선택해주십시오")
-    #     time.sleep(0.8)
-    #     print("1.안정적이지만 수치가 낮은 강화 2.위험하지만 수치가 높은 강화 3.평범한 강화")
-    #     B = input("선택:")
-    #     if B =="1":
-    #         print("1.안정적이지만 수치가 낮은 강화를 선택하셨습니다.")
-    #         print("강화를 시작합니다.")
-    #         time.sleep(3)
-    #         g = ran.randint(0,100)
-    #         print(g)
-
-    #         if g % 1.5 == 0:
-    #             print("강화에 성공했습니다.\n게임을 시작합니다.")
-
-    #         else:
-    #             print("강화에 실패했습니다.\n게임을 시작합니다.")
-    #     if B =="2":
-    #         print("2.위험하지만 수치가 높은 강화를 선택하셨습니다.")
-    #         print("강화를 시작합니다.")
-    #         time.sleep(3)
-    #         g = ran.randint(0,100)
-    #         print(g)
-
-    #         if g % 3 == 0:
-    #             print("강화에 성공했습니다.\n게임을 시작합니다.")
-
-    #         else:
-    #             print("강화에 실패했습니다.\n게임을 시작합니다.")
-
-    #     if B =="3":
-    #         print("3.평범한 강화를 선택하셨습니다.")
-    #         print("강화를 시작합니다.")
-    #         time.sleep(3)
-    #         g = ran.randint(0,100)
-    #         print(g)
-
-    #         if g % 2 == 0:
-    #             print("강화에 성공했습니다.\n게임을 시작합니다.")
-
-    #         else:
-    #             print("강화에 실패했습니다.\n게임을 시작합니다.")
-
-
-
-    # A = input("선택:")
-    # if A=="1":
-    #     print("당신은 전진합니다.")
-    #     print(luk)
-    #     if luk<=30:
-    #         print("당신은 적과 조우합니다.")
-
-    #     pass
-    # elif A =="2":
-    #     print("당신은 불길함을 느끼고 후퇴하기로 결정합니다.")
-    #     pass #이거 pass말고 뒤로돌아가는거 추가하셈
-    # elif A =="3":
-    #     print("당신은 돌아가기로 결정합니다.")
-    #     pass #이것도 뒤로돌아가는걸로 바꿔
 
 class Button():
     
@@ -114,7 +58,7 @@ class Button():
         
         self.image = transform.scale(image, (int(width*scale),int(height*scale)))
         
-        self.rect =self.image.get_rect()
+        self.rect = self.image.get_rect()
         
         self.rect.center=(x,y)
         
@@ -144,12 +88,12 @@ class Button():
 
 
 
-start_but = Button(640, 500, but_img, 10)
-fight_but = Button(207.85, 600, but_img, 10)
-upgrade_but = Button(390.71, 600, but_img, 10)
-upgrade1_but = Button(640, 600, but_img, 10)
-exit_but = Button(1122.14, 600, but_img, 10)
-back_but = Button(85, 85, cir_but_img, 5)
+start_but = Button(640, 400, but_img, 8)
+fight_but = Button(170, 610, but_img, 8)
+upgrade_but = Button(360, 610, but_img, 8)
+upgrade1_but = Button(640, 610, but_img, 8)
+exit_but = Button(80, 80, sq_img, 10)
+back_but = Button(80, 80, sq_img, 10)
 
 local = loaction[1]
 
@@ -166,6 +110,8 @@ def text(fon,size,text,x,y,color):
     
     textrect.center = (x,y)
     
+    # fontset.bold = True
+    
     dis.blit(fontsetrender,textrect)
 
 def set_gamma(img, gamma):
@@ -174,38 +120,60 @@ def set_gamma(img, gamma):
     buf.write(buf.raw.translate(gmap), 0)
     return
 
+def fadein(t):
+    
+    fadein=Surface((1280,720))
+    
+    for i in range(t*10):
+        
+        fadein.set_alpha(i/2.5)
+        
+        dis.blit(fadein,(0,0))
+        
+        display.flip()
+        
+        time.delay(t)
+
 def opening():
-    dis.fill(whi)
-    text(ui_font, 100, '진우의 학교 생활', 1280 / 2, 100, blk)
+    dis.fill(pink)
+    text(son_font, 100, '진우의 학교 생활', 640, 200, blk)
     if start_but.draw():
         return 1
-    text(ui_font, 80, '시작', 640, 500, blk)
-    return 0
+    text(ui_font, 80, '시작',640, 400, blk)
+    return None
 
 def mainmenu():
-    global running
-    dis.fill(whi)
+    global running, local
+    dis.blit(bg_img,(0,0))
     if fight_but.draw():
-        return '1'
+        local = loaction[4]
+        print(3)
+        return '학'
     if upgrade_but.draw():
-        return '2'
+        local = loaction[3]
+        print(4)
+        return '강'
     if exit_but.draw():
         running = False
         quit()
         sys.exit()
-    text(digi_font, 50, f'+ {current_upgraded} {rank_table[rank]} 진우',640,150,red)
-    text(ui_font, 35, '이계의 전장', 207.85, 600, blk)
-    text(ui_font, 80, '강화', 390.71, 600, blk)
-    text(ui_font, 80, '종료', 1122.14, 600, red)
-    return '0'
+    # text(digi_font, 50, f'+ {current_upgraded:>3} {rank_table[rank]} 진우',643,96.5,blk)
+    text(son2_font, 50, f'+ {current_upgraded:>3} {rank_table[rank]} 진우',645,90,whi)
+    text(son2_font, 50, f"힘 {stat['str']:>4} / 민첩 {stat['dex']:>4} / 지능 {stat['int']:>4} / 운 {stat['luk']:>4} / 공격력 {stat['atk']:>4}", 640,195, whi)
+    text(son2_font, 50, f"크리티컬 확률 {stat['crt_chance']:>4} / 방어력 {stat['def']:>4}", 640,245, whi)
+    text(son2_font, 50, f"경험치 {exx:>5.2f}%", 640,295, ylw)
+    text(son_font, 50, '등교', 170, 610, blu)
+    text(son_font, 50, '공부', 360, 610, ylw)
+    text(son_font, 50, '종료', 80, 80, pink)
+    return None
 
 def upgrade():
     global current_upgraded, upgrade_prob, rank
-    dis.fill(whi)
+    dis.blit(bg_img,(0,0))
     if upgrade_prob >= 69:
             upgrade_prob = 70
     if back_but.draw():
-        return '2'
+        return '3'
     if upgrade1_but.draw():
         ra = ran.randint(1,100)
         d = pow(stat["luk"], 1/3) * (ra / 100) + ra
@@ -216,13 +184,18 @@ def upgrade():
             upgrade_prob -= 7
             current_upgraded -= 1
         print(d,100- upgrade_prob, current_upgraded)
-    text(digi_font, 50, f'+ {current_upgraded:>3} {rank_table[rank]} 진우',640,150,red)
-    text(digi_font, 50, '현재 강화 확률 : {0:>3}%'.format(100 - upgrade_prob),640,210,red)
-    text(ui_font, 80, '강화', 640, 600, blk)
-    text(ui_font, 40, '뒤로', 85, 85, blk)
+    text(son2_font, 50, f'+ {current_upgraded:>3} {rank_table[rank]} 진우',645,90,whi)
+    text(son_font, 50, '공부 성공 확률 : {0:>3}%'.format(100 - upgrade_prob),640,245,pink)
+    text(son2_font, 80, '공부', 640, 600, blu)
+    text(son_font, 40, '뒤로', 80, 80, pink)
+    return None
     
-
-
+def school():
+    dis.blit(school_img,(0,0))
+    if back_but.draw():
+        return '3'
+    text(son2_font,50,'뒤로',80,80,whi)
+    return None
 
 
 while running:
@@ -234,14 +207,22 @@ while running:
             if e.key == K_ESCAPE:
                 quit()
                 sys.exit()
-    if local == '오프닝':
+    if local == loaction[1]:
         if opening() == 1:
+            fadein(5)
             local = loaction[2]
-    if local == '메인메뉴':
-        if mainmenu() == '2':
+    if local == loaction[2]:
+        if mainmenu() == '학':
+            print(4444)
+            local = loaction[4]
+        if mainmenu() == '강':
+            print(3333)
             local = loaction[3]
-    if local == '강화소':
-        if upgrade() == '2':
+    if local == loaction[3]:
+        if upgrade() == '3':
+            local = loaction[2]
+    if local == loaction[4]:
+        if school() == '3':
             local = loaction[2]
     display.flip()
     clock.tick(fps)
